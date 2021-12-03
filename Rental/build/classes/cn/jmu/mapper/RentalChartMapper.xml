@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.jmu.mapper.RentalChartMapper">
+	<select id="queryPriceList" parameterType="String" resultType="cn.jmu.po.PriceList">
+		select region , price , sum(number) as number
+		from rental.regional_price_list where region = #{region}
+		group by region , price order by price ASC
+	</select>
+	<select id="queryAreaAPList" parameterType="String" resultType="cn.jmu.po.AreaAPList">
+		select * from
+		regional_rental_area_averageprice_list where region = #{region}
+	</select>
+	<select id="queryHouseAPList" parameterType="String" resultType="cn.jmu.po.HouseAPList">
+		select region , houseLayout , round(avg(averagePrice),2) as averagePrice
+		from regional_rental_houselayout_averageprice_list where region = #{region}
+		group by region , houseLayout order by houseLayout ASC
+	</select>
+	<select id="queryQuantityList"
+		resultType="cn.jmu.po.QuantityList">
+		select * from
+		regional_rental_quantity_list order by rentalNum DESC
+	</select>
+	<select id="sortPriceList" parameterType="String"
+		resultType="cn.jmu.po.PriceList">
+		select * from
+		regional_price_list where region like
+		#{region} and price like #{price} order by number DESC
+	</select>
+	<select id="sortAreaAPList" parameterType="String"
+		resultType="cn.jmu.po.AreaAPList">
+		select * from
+		regional_rental_area_averageprice_list where
+		region like #{region} order by areaPrice
+	</select>
+	<select id="sortHouseAPList" parameterType="String"
+		resultType="cn.jmu.po.HouseAPList">
+		select * from
+		regional_rental_houselayout_averageprice_list
+		where region like #{region} and houseLayout like #{houseLayout} order
+		by averagePrice
+	</select>
+	<select id="avgAreaAPList" parameterType="String"
+		resultType="Double">
+		select round(AVG(areaPrice),2) AS avgPrice from regional_rental_area_averageprice_list where region = #{region};
+	</select>
+	<select id="avgHouseAPList" parameterType="String"
+		resultType="Double">
+		select round(AVG(averagePrice),2) AS avgPrice from regional_rental_houselayout_averageprice_list where region = #{region};
+	</select>
+</mapper>
